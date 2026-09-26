@@ -1,4 +1,4 @@
-# WorldStreet Prediction Market
+# Wordlstreet Prediction Marketplace
 
 Standalone React and TypeScript prediction market app, including sports markets, market details, positions, rankings, activity, and perpetuals.
 
