@@ -32,20 +32,13 @@
   --ws-border-subtle: #272727;
   --ws-border-default: #404040;
   --ws-border-strong: #727272;
-  --ws-action-primary-default: #D4E745;
-  --ws-action-primary-hover: #E8F68E;
-  --ws-action-primary-active: #B4C923;
-  /* Gold used as text rather than as a fill. Light needs its own darker stop because
-     the light fill gold only reaches 3.2:1 on white; the dark fill gold already reaches
-     9.0:1 on surface.base, so here the token resolves to the same value. Both themes
-     define it so a component can reach for one name. */
-  --ws-action-primary-text: #D4E745;
-  /* Tonal: the accent mixed into whatever surface it sits on, carrying accent-coloured
-     text. Measured at 16% it clears AA in both themes (6.3:1 dark, 6.2:1 light) while
-     staying quiet enough that a real primary still wins the row. Mixed with transparent
-     rather than a fixed surface so it composites correctly on canvas or on a card. */
-  --ws-action-primary-tonal: color-mix(in srgb, #D4E745 16%, transparent);
-  --ws-action-primary-tonal-hover: color-mix(in srgb, #D4E745 24%, transparent);
+  --ws-action-primary-default: var(--ws-prim-gold-400);
+  --ws-action-primary-hover: var(--ws-prim-gold-200);
+  --ws-action-primary-active: var(--ws-prim-gold-500);
+  /* Gold text follows the fill in dark mode; light mode uses a darker stop. */
+  --ws-action-primary-text: var(--ws-prim-gold-400);
+  --ws-action-primary-tonal: color-mix(in srgb, var(--ws-action-primary-default) 16%, transparent);
+  --ws-action-primary-tonal-hover: color-mix(in srgb, var(--ws-action-primary-default) 24%, transparent);
   --ws-domain-social-accent: #3182CE;
   --ws-domain-vivid-accent: #4F46E5;
   --ws-domain-xstream-accent: #34A073;
@@ -89,12 +82,12 @@
   --ws-border-subtle: #E4E4E1;
   --ws-border-default: #D2D2CF;
   --ws-border-strong: #92928E;
-  --ws-action-primary-default: #8C9D15;
-  --ws-action-primary-hover: #65720C;
-  --ws-action-primary-active: #404906;
-  --ws-action-primary-text: #65720C;
-  --ws-action-primary-tonal: color-mix(in srgb, #8C9D15 16%, transparent);
-  --ws-action-primary-tonal-hover: color-mix(in srgb, #8C9D15 24%, transparent);
+  --ws-action-primary-default: var(--ws-prim-gold-400);
+  --ws-action-primary-hover: var(--ws-prim-gold-300);
+  --ws-action-primary-active: var(--ws-prim-gold-500);
+  --ws-action-primary-text: var(--ws-prim-gold-700);
+  --ws-action-primary-tonal: color-mix(in srgb, var(--ws-action-primary-default) 16%, transparent);
+  --ws-action-primary-tonal-hover: color-mix(in srgb, var(--ws-action-primary-default) 24%, transparent);
   --ws-domain-social-accent: #2563EB;
   --ws-domain-vivid-accent: #4338CA;
   --ws-domain-xstream-accent: #047857;
@@ -124,19 +117,18 @@
 
 /* raw primitives */
 :root {
-  /* Core / primary ramp from the new master palette. Existing gold token names remain
-     as compatibility aliases for components while the visual palette moves to lime. */
-  --ws-prim-gold-50: #FAFDE6;
-  --ws-prim-gold-100: #F3FBC0;
-  --ws-prim-gold-200: #E8F68E;
-  --ws-prim-gold-300: #DDF15B;
-  --ws-prim-gold-400: #D4E745;
-  --ws-prim-gold-500: #B4C923;
-  --ws-prim-gold-600: #8C9D15;
-  --ws-prim-gold-700: #65720C;
-  --ws-prim-gold-800: #404906;
-  --ws-prim-gold-900: #212602;
-  --ws-prim-gold-950: #101300;
+  /* Primary gold ramp, anchored at the prediction market brand color. */
+  --ws-prim-gold-50: #FDF9EC;
+  --ws-prim-gold-100: #FAEFCF;
+  --ws-prim-gold-200: #F3DA94;
+  --ws-prim-gold-300: #ECC76A;
+  --ws-prim-gold-400: #E2B43F;
+  --ws-prim-gold-500: #C99A2C;
+  --ws-prim-gold-600: #A67B1E;
+  --ws-prim-gold-700: #795815;
+  --ws-prim-gold-800: #513B10;
+  --ws-prim-gold-900: #302308;
+  --ws-prim-gold-950: #1B1405;
   --ws-prim-neutral-50: #FAFAFA;
   --ws-prim-neutral-100: #F5F5F5;
   --ws-prim-neutral-200: #E6E6E6;
@@ -389,7 +381,7 @@
   --ws-text-tertiary-raised: color-mix(in srgb, var(--ws-prim-neutral-300) 80%, var(--ws-prim-neutral-700));
 
   /* The primary gold a few steps down, for an icon tile or a badge that carries the brand
-     but must not read as a button. gold.300 on gold.950 is 9.2:1. */
+     but must not read as a button. Uses the light and dark ends of the gold ramp. */
   --ws-action-primary-shade: var(--ws-prim-gold-950);
   --ws-action-primary-shade-text: var(--ws-prim-gold-300);
 
@@ -443,7 +435,7 @@
   --ws-text-tertiary-panel: var(--ws-prim-neutral-500);
   --ws-text-tertiary-raised: var(--ws-prim-neutral-500);
 
-  /* Light: the pale end of the ramp with its deep end on top — gold.800 on gold.100, 7.7:1. */
+  /* Light: the pale end of the ramp with its deep end on top — gold.800 on gold.100. */
   --ws-action-primary-shade: var(--ws-prim-gold-100);
   --ws-action-primary-shade-text: var(--ws-prim-gold-800);
 
