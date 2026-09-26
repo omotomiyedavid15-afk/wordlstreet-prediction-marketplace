@@ -1,0 +1,454 @@
+/* WorldStreet design tokens — v5.1.
+   Semantic tokens are what components consume; the raw primitives at the bottom exist
+   so the Foundations > Colors page can show the scales the semantics were picked from.
+   Dark is the primary theme; index.html sets data-theme before first paint.
+
+   Domain accents mark which mode you are in and never carry meaning — success/warning/
+   danger/info always come from the feedback tokens, even inside a coloured mode. Vision
+   keeps cyan rather than a video-brand red because feedback.danger already owns red, and
+   an accent that collides with a feedback colour makes "something is wrong" and "which
+   mode am I in" indistinguishable. */
+
+/* dark theme (default) */
+:root, [data-theme="dark"] {
+  --ws-surface-sunken: #0B0B0B;
+  --ws-surface-canvas: #1A1A1A;
+  --ws-surface-base: #272727;
+  --ws-surface-raised: #404040;
+  --ws-surface-overlay: #535353;
+  /* Receipt paper follows the theme: charcoal in dark, off-white in light. */
+  --ws-surface-ticket: var(--ws-surface-base);
+  --ws-text-on-ticket: var(--ws-text-primary);
+  --ws-text-primary: #FAFAFA;
+  --ws-text-secondary: #D3D3D3;
+  --ws-text-tertiary: #727272;
+  --ws-text-disabled: #404040;
+  --ws-text-on-accent: #0B0B0B;
+  /* Text sitting on a filled feedback.danger button. This cannot be text-on-accent:
+     the dark theme's red is light (#FF3138) and needs near-black at 5.4:1, while the
+     light theme's red is dark (#CA0B11) and needs near-white at 5.6:1. Using one value
+     for both drops light mode to 3.3:1, under AA. */
+  --ws-text-on-danger: #0B0B0B;
+  --ws-border-subtle: #272727;
+  --ws-border-default: #404040;
+  --ws-border-strong: #727272;
+  --ws-action-primary-default: #D4E745;
+  --ws-action-primary-hover: #E8F68E;
+  --ws-action-primary-active: #B4C923;
+  /* Gold used as text rather than as a fill. Light needs its own darker stop because
+     the light fill gold only reaches 3.2:1 on white; the dark fill gold already reaches
+     9.0:1 on surface.base, so here the token resolves to the same value. Both themes
+     define it so a component can reach for one name. */
+  --ws-action-primary-text: #D4E745;
+  /* Tonal: the accent mixed into whatever surface it sits on, carrying accent-coloured
+     text. Measured at 16% it clears AA in both themes (6.3:1 dark, 6.2:1 light) while
+     staying quiet enough that a real primary still wins the row. Mixed with transparent
+     rather than a fixed surface so it composites correctly on canvas or on a card. */
+  --ws-action-primary-tonal: color-mix(in srgb, #D4E745 16%, transparent);
+  --ws-action-primary-tonal-hover: color-mix(in srgb, #D4E745 24%, transparent);
+  --ws-domain-social-accent: #3182CE;
+  --ws-domain-vivid-accent: #4F46E5;
+  --ws-domain-xstream-accent: #34A073;
+  --ws-domain-marketplace-accent: #E05626;
+  --ws-domain-vision-accent: #1BD4DA;
+  --ws-domain-academy-accent: #D97706;
+  --ws-domain-prediction-accent: #A855F7;
+  /* Text on a solid domain fill — the current page of the animated pagination. Every dark
+     accent is light enough for near-black: 4.8:1 at worst (vivid), 6.1:1 at best. */
+  --ws-text-on-domain: var(--ws-prim-neutral-950);
+  --ws-feedback-success: #34A073;
+  --ws-feedback-warning: #D4E745;
+  --ws-feedback-danger: #FF3138;
+  --ws-feedback-info: #3182CE;
+
+  /* Fills for solid badges, and the one text colour that sits on them. Measured: on
+     dark every feedback colour is light enough that near-black clears AA comfortably
+     (5.2:1 worst case, on info). Only success diverges between themes — see light. */
+  --ws-text-on-feedback: #0B0B0B;
+  --ws-feedback-success-fill: #34A073;
+  --ws-feedback-warning-fill: #D4E745;
+  --ws-feedback-danger-fill: #FF3138;
+  --ws-feedback-info-fill: #3182CE;
+}
+
+/* light theme */
+[data-theme="light"] {
+  --ws-surface-sunken: #EEEEEC;
+  --ws-surface-canvas: #F7F7F5;
+  --ws-surface-base: #FCFCFA;
+  --ws-surface-raised: #F2F2F0;
+  --ws-surface-overlay: #FFFFFF;
+  --ws-surface-ticket: var(--ws-prim-neutral-100);
+  --ws-text-on-ticket: var(--ws-prim-neutral-950);
+  --ws-text-primary: #1A1A1A;
+  --ws-text-secondary: #404040;
+  --ws-text-tertiary: #727272;
+  --ws-text-disabled: #B8B8B5;
+  --ws-text-on-accent: #0B0B0B;
+  --ws-text-on-danger: #FAFAFA;
+  --ws-border-subtle: #E4E4E1;
+  --ws-border-default: #D2D2CF;
+  --ws-border-strong: #92928E;
+  --ws-action-primary-default: #8C9D15;
+  --ws-action-primary-hover: #65720C;
+  --ws-action-primary-active: #404906;
+  --ws-action-primary-text: #65720C;
+  --ws-action-primary-tonal: color-mix(in srgb, #8C9D15 16%, transparent);
+  --ws-action-primary-tonal-hover: color-mix(in srgb, #8C9D15 24%, transparent);
+  --ws-domain-social-accent: #2563EB;
+  --ws-domain-vivid-accent: #4338CA;
+  --ws-domain-xstream-accent: #047857;
+  --ws-domain-marketplace-accent: #C2410C;
+  --ws-domain-vision-accent: #197A85;
+  --ws-domain-academy-accent: #B45309;
+  --ws-domain-prediction-accent: #9333EA;
+  /* Light accents are dark enough for white: 4.6:1 at worst (xstream), 5.9:1 at best.
+     Pure white, not neutral.50 — xstream drops to 4.4 against #FAFAFA. */
+  --ws-text-on-domain: #FFFFFF;
+  --ws-feedback-success: #047857;
+  --ws-feedback-warning: #A25906;
+  --ws-feedback-danger: #CA0B11;
+  --ws-feedback-info: #1D4ED8;
+
+  /* Near-white text clears AA on warning, danger and info here (5.1 / 5.6 / 7.3), but
+     feedback.success at #0F864B reaches only 4.44 against white and 4.25 against black —
+     it fails both ways. The solid badge therefore drops one stop to xstream-800, which
+     reaches 6.45. The outline badge keeps the lighter #0F864B, because there the colour
+     is the text and it is sitting on a white surface, where it reads at 4.8. */
+  --ws-text-on-feedback: #FAFAFA;
+  --ws-feedback-success-fill: #065F46;
+  --ws-feedback-warning-fill: #A25906;
+  --ws-feedback-danger-fill: #CA0B11;
+  --ws-feedback-info-fill: #1E40AF;
+}
+
+/* raw primitives */
+:root {
+  /* Core / primary ramp from the new master palette. Existing gold token names remain
+     as compatibility aliases for components while the visual palette moves to lime. */
+  --ws-prim-gold-50: #FAFDE6;
+  --ws-prim-gold-100: #F3FBC0;
+  --ws-prim-gold-200: #E8F68E;
+  --ws-prim-gold-300: #DDF15B;
+  --ws-prim-gold-400: #D4E745;
+  --ws-prim-gold-500: #B4C923;
+  --ws-prim-gold-600: #8C9D15;
+  --ws-prim-gold-700: #65720C;
+  --ws-prim-gold-800: #404906;
+  --ws-prim-gold-900: #212602;
+  --ws-prim-gold-950: #101300;
+  --ws-prim-neutral-50: #FAFAFA;
+  --ws-prim-neutral-100: #F5F5F5;
+  --ws-prim-neutral-200: #E6E6E6;
+  --ws-prim-neutral-300: #D3D3D3;
+  --ws-prim-neutral-400: #A3A3A3;
+  --ws-prim-neutral-500: #727272;
+  --ws-prim-neutral-600: #535353;
+  --ws-prim-neutral-700: #404040;
+  --ws-prim-neutral-800: #272727;
+  --ws-prim-neutral-900: #1A1A1A;
+  --ws-prim-neutral-950: #0B0B0B;
+  --ws-prim-vivid-50: #EEF2FF;
+  --ws-prim-vivid-100: #E0E7FF;
+  --ws-prim-vivid-200: #C7D2FE;
+  --ws-prim-vivid-300: #A5B4FC;
+  --ws-prim-vivid-400: #818CF8;
+  --ws-prim-vivid-500: #4F46E5;
+  --ws-prim-vivid-600: #4338CA;
+  --ws-prim-vivid-700: #3730A3;
+  --ws-prim-vivid-800: #312E81;
+  --ws-prim-vivid-900: #1E1B4B;
+  --ws-prim-vivid-950: #0F0E2E;
+  --ws-prim-xstream-50: #ECFDF5;
+  --ws-prim-xstream-100: #D1FAE5;
+  --ws-prim-xstream-200: #A7F3D0;
+  --ws-prim-xstream-300: #6EE7B7;
+  --ws-prim-xstream-400: #34D399;
+  --ws-prim-xstream-500: #34A073;
+  --ws-prim-xstream-600: #059669;
+  --ws-prim-xstream-700: #047857;
+  --ws-prim-xstream-800: #065F46;
+  --ws-prim-xstream-900: #064E3B;
+  --ws-prim-xstream-950: #022C22;
+  --ws-prim-social-50: #EFF6FF;
+  --ws-prim-social-100: #DBEAFE;
+  --ws-prim-social-200: #BFDBFE;
+  --ws-prim-social-300: #93C5FD;
+  --ws-prim-social-400: #60A5FA;
+  --ws-prim-social-500: #3182CE;
+  --ws-prim-social-600: #2563EB;
+  --ws-prim-social-700: #1D4ED8;
+  --ws-prim-social-800: #1E40AF;
+  --ws-prim-social-900: #1E3A8A;
+  --ws-prim-social-950: #172554;
+  --ws-prim-market-50: #FFF7ED;
+  --ws-prim-market-100: #FFEDD5;
+  --ws-prim-market-200: #FED7AA;
+  --ws-prim-market-300: #FDBA74;
+  --ws-prim-market-400: #FB923C;
+  --ws-prim-market-500: #E05626;
+  --ws-prim-market-600: #C2410C;
+  --ws-prim-market-700: #9A3412;
+  --ws-prim-market-800: #7C2D12;
+  --ws-prim-market-900: #431407;
+  --ws-prim-market-950: #270A03;
+  --ws-prim-vision-50: #EEFDFC;
+  --ws-prim-vision-100: #D3FAF9;
+  --ws-prim-vision-200: #ADF4F3;
+  --ws-prim-vision-300: #74ECEC;
+  --ws-prim-vision-400: #34D9DC;
+  --ws-prim-vision-500: #1BD4DA;
+  --ws-prim-vision-600: #1798A3;
+  --ws-prim-vision-700: #197A85;
+  --ws-prim-vision-800: #1D636D;
+  --ws-prim-vision-900: #1D525C;
+  --ws-prim-vision-950: #0D373F;
+  --ws-prim-academy-50: #FFFBEB;
+  --ws-prim-academy-100: #FEF3C7;
+  --ws-prim-academy-200: #FDE68A;
+  --ws-prim-academy-300: #FCD34D;
+  --ws-prim-academy-400: #FBBF24;
+  --ws-prim-academy-500: #D97706;
+  --ws-prim-academy-600: #D97706;
+  --ws-prim-academy-700: #B45309;
+  --ws-prim-academy-800: #92400E;
+  --ws-prim-academy-900: #78350F;
+  --ws-prim-academy-950: #451A03;
+  --ws-prim-predict-50: #FAF5FF;
+  --ws-prim-predict-100: #F3E8FF;
+  --ws-prim-predict-200: #E9D5FF;
+  --ws-prim-predict-300: #D8B4FE;
+  --ws-prim-predict-400: #C084FC;
+  --ws-prim-predict-500: #A855F7;
+  --ws-prim-predict-600: #9333EA;
+  --ws-prim-predict-700: #7E22CE;
+  --ws-prim-predict-800: #6B21A8;
+  --ws-prim-predict-900: #581C87;
+  --ws-prim-predict-950: #3B0764;
+  --ws-prim-red-50: #FFF1F1;
+  --ws-prim-red-100: #FFDFE0;
+  --ws-prim-red-200: #FFC4C6;
+  --ws-prim-red-300: #FF9B9E;
+  --ws-prim-red-400: #FF6267;
+  --ws-prim-red-500: #FF3138;
+  --ws-prim-red-600: #F12229;
+  --ws-prim-red-700: #CA0B11;
+  --ws-prim-red-800: #A70D12;
+  --ws-prim-red-900: #8A1216;
+  --ws-prim-red-950: #4B0406;
+  --ws-prim-blue-50: #F1F7FE;
+  --ws-prim-blue-100: #E3EFFB;
+  --ws-prim-blue-200: #C0DEF7;
+  --ws-prim-blue-300: #89C3F0;
+  --ws-prim-blue-400: #3298E2;
+  --ws-prim-blue-500: #2389D4;
+  --ws-prim-blue-600: #156CB4;
+  --ws-prim-blue-700: #125692;
+  --ws-prim-blue-800: #134A79;
+  --ws-prim-blue-900: #153F65;
+  --ws-prim-blue-950: #0E2843;
+}
+/* Non-colour scales. These are not from the v5.1 palette file — they document the
+   values the sandbox already uses so Typography, Space and Motion have something real
+   to render. Replace with design's own scales when those land. */
+:root {
+  --ws-font-size-display: 31px;
+  --ws-font-size-heading: 19px;
+  --ws-font-size-body: 15px;
+  --ws-font-size-ui: 13.5px;
+  --ws-font-size-caption: 12px;
+  --ws-font-size-label: 10px;
+
+  /* Derived, not chosen: size x 1.45, rounded to the nearest 4 so every line sits on
+     the 4px grid. Display is the one exception at x1.1 — large type needs tighter
+     leading or the title reads as two loose lines rather than one block. */
+  --ws-line-height-display: 36px;
+  --ws-line-height-heading: 28px;
+  --ws-line-height-body: 20px;
+  --ws-line-height-ui: 20px;
+  --ws-line-height-caption: 16px;
+  --ws-line-height-label: 16px;
+
+  --ws-space-1: 2px;
+  --ws-space-2: 4px;
+  --ws-space-3: 8px;
+  --ws-space-4: 12px;
+  --ws-space-5: 16px;
+  --ws-space-6: 24px;
+  --ws-space-7: 32px;
+  --ws-space-8: 48px;
+  --ws-space-9: 64px;
+
+  --ws-duration-instant: 80ms;
+  --ws-duration-fast: 150ms;
+  --ws-duration-base: 220ms;
+  --ws-duration-slow: 320ms;
+
+  /* How long a transient surface stays loud before it settles. Not a transition — a
+     dwell. The long variant is for anything carrying an action, so a toast does not
+     relax or dismiss out from under someone who is still reading the button. */
+  --ws-duration-hold: 1600ms;
+  --ws-duration-hold-long: 2600ms;
+
+  /* Standard for state changes; entrance decelerates in, exit accelerates out. */
+  --ws-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ws-ease-entrance: cubic-bezier(0, 0, 0, 1);
+  --ws-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+}
+
+/* Corner radius. Same 4px grid as space, for the same reason: a radius that is not a
+   multiple of 4 will not sit flush against anything else in the system.
+   Radius scales with the surface it is cutting. 16px on a 24px chip turns it into an
+   accidental pill; 4px on a full-width sheet looks unfinished. */
+:root {
+  --ws-radius-none: 0px;
+  --ws-radius-sm: 4px;
+  --ws-radius-md: 8px;
+  --ws-radius-lg: 12px;
+  --ws-radius-xl: 16px;
+  --ws-radius-full: 9999px;
+  /* One step past xl, for a modal, drawer or sheet: the surface is the biggest object on
+     screen, so it carries the deepest corner and its inner groups nest inside it. */
+  --ws-radius-sheet: 22px;
+}
+
+/* Core sizes. Five archetype heights that cover almost every control we ship. Not every
+   component exists at every size — see the support matrix on Foundations > Dimensions. */
+:root {
+  --ws-size-xs: 20px;
+  --ws-size-sm: 28px;
+  --ws-size-md: 36px;
+  --ws-size-lg: 44px;
+  --ws-size-xl: 56px;
+}
+
+/* Layout. Fixed measurements of the app frame itself. */
+:root {
+  --ws-layout-sidebar: 264px;
+  --ws-layout-content-max: 960px;
+  --ws-layout-gutter: 24px;
+  --ws-layout-margin: 40px;
+  --ws-layout-columns: 12;
+}
+
+/* Pressable control surface. Four layers, taken from the reference buttons:
+   a top-down sheen so the fill is not flat, a 1px inner rim light along the top edge,
+   a hard 1px shadow directly under the button that reads as its bottom edge, and a
+   soft ambient shadow that lifts it off the page. The sheen is a colour-mix rather
+   than a fixed gradient so it works on gold, red, and the neutral fill alike.
+   Pressed swaps the outer shadows for an inner one — the button appears to sink. */
+:root, [data-theme="dark"] {
+  --ws-sheen: color-mix(in srgb, #FFFFFF 16%, transparent);
+  --ws-shadow-control:
+    inset 0 1px 0 0 color-mix(in srgb, #FFFFFF 22%, transparent),
+    0 1px 0 0 color-mix(in srgb, #000000 55%, transparent),
+    0 2px 5px -1px color-mix(in srgb, #000000 45%, transparent);
+  --ws-shadow-control-pressed:
+    inset 0 1px 3px 0 color-mix(in srgb, #000000 40%, transparent);
+
+  /* Floating surfaces — a toast, a menu, a sheet. Two layers: a tight contact shadow
+     that anchors the edge, and a wide soft one that lifts the whole card off the page.
+     A single shadow reads as a blur; two read as depth. */
+  --ws-shadow-overlay:
+    0 1px 2px 0 color-mix(in srgb, #000000 50%, transparent),
+    0 12px 28px -8px color-mix(in srgb, #000000 70%, transparent);
+
+  /* Tonal surfaces. A tinted card carrying tone-coloured text, for a notice that has to
+     persist and keep signalling rather than announce once and go quiet.
+     The text is NOT the feedback colour — that fails on its own tint (3.1:1 worst). It is
+     a dedicated lighter stop, measured at 6.4:1 worst across all five tones. The surfaces
+     are opaque rather than a colour-mix so the contrast holds whatever sits behind them. */
+  --ws-tonal-success-surface: #254535;
+  --ws-tonal-success-text: #80F5BA;
+  --ws-tonal-error-surface: #4A292A;
+  --ws-tonal-error-text: #FF9B9E;
+  --ws-tonal-warning-surface: #493F24;
+  --ws-tonal-warning-text: #FFD745;
+  --ws-tonal-info-surface: #263743;
+  --ws-tonal-info-text: #89C3F0;
+  --ws-tonal-neutral-surface: #2F2F2F;
+  --ws-tonal-neutral-text: #D3D3D3;
+
+  /* The knob of a switch in its off position — the lightest thing on the control, so it
+     stands off the grey track in both themes. On gold it takes text.on-accent instead. */
+  --ws-control-thumb: #FAFAFA;
+  --ws-control-thumb-shadow: 0 1px 2px 0 color-mix(in srgb, #000000 40%, transparent);
+
+  /* What sits between a blocking surface and the page. The darkest neutral at an alpha,
+     not a colour of its own: dense enough that a table behind a modal stops competing,
+     thin enough that you can still tell where you were. */
+  --ws-scrim: color-mix(in srgb, var(--ws-prim-neutral-950) 72%, transparent);
+
+  /* text.tertiary inside an overlay panel. #727272 measures 3.1:1 on surface.base — under
+     AA for the helper lines, descriptions and placeholders a form in a modal is full of.
+     neutral.400 is 5.9:1 on the panel and 7.9:1 in its sunken wells, and still sits
+     clearly below text.secondary. */
+  --ws-text-tertiary-panel: var(--ws-prim-neutral-400);
+  /* …and on a raised menu or popover (#404040), where even neutral.400 is 4.1:1. Secondary
+     four-fifths of the way toward the surface: 5.1:1, still a step below secondary. */
+  --ws-text-tertiary-raised: color-mix(in srgb, var(--ws-prim-neutral-300) 80%, var(--ws-prim-neutral-700));
+
+  /* The primary gold a few steps down, for an icon tile or a badge that carries the brand
+     but must not read as a button. gold.300 on gold.950 is 9.2:1. */
+  --ws-action-primary-shade: var(--ws-prim-gold-950);
+  --ws-action-primary-shade-text: var(--ws-prim-gold-300);
+
+  /* Tooltips are theme-inverted on purpose: always the darkest neutral with near-white
+     text, in both themes, so a label reads the same wherever it floats. On a dark page
+     the fill alone would sink into the surface, so dark mode adds a 1px light ring to the
+     shadow. neutral.50 on neutral.950: 18.9:1; the muted line (neutral.400): 7.9:1. */
+  --ws-tip-surface: var(--ws-prim-neutral-950);
+  --ws-tip-text: var(--ws-prim-neutral-50);
+  --ws-tip-muted: var(--ws-prim-neutral-400);
+  --ws-tip-shadow:
+    0 0 0 1px color-mix(in srgb, #FFFFFF 12%, transparent),
+    0 8px 24px -8px color-mix(in srgb, #000000 80%, transparent);
+}
+
+[data-theme="light"] {
+  /* Light surfaces need a weaker sheen and a softer ambient, or the button looks
+     plastic against near-white rather than raised. */
+  --ws-sheen: color-mix(in srgb, #FFFFFF 62%, transparent);
+  --ws-shadow-control:
+    inset 0 1px 0 0 color-mix(in srgb, #FFFFFF 78%, transparent),
+    0 1px 0 0 color-mix(in srgb, #1A1A1A 12%, transparent),
+    0 4px 10px -4px color-mix(in srgb, #1A1A1A 18%, transparent);
+  --ws-shadow-control-pressed:
+    inset 0 1px 3px 0 color-mix(in srgb, #1A1A1A 18%, transparent);
+
+  --ws-shadow-overlay:
+    0 1px 2px 0 color-mix(in srgb, #1A1A1A 8%, transparent),
+    0 12px 28px -8px color-mix(in srgb, #1A1A1A 16%, transparent);
+
+  /* Same idea inverted: a pale tint with a dark tone stop on top. Worst pairing 5.5:1. */
+  --ws-tonal-success-surface: #D9ECE2;
+  --ws-tonal-success-text: #12693F;
+  --ws-tonal-error-surface: #F7D8D9;
+  --ws-tonal-error-text: #A70D12;
+  --ws-tonal-warning-surface: #F0E4D7;
+  --ws-tonal-warning-text: #86460D;
+  --ws-tonal-info-surface: #D9E4EE;
+  --ws-tonal-info-text: #134A79;
+  --ws-tonal-neutral-surface: #F5F5F5;
+  --ws-tonal-neutral-text: #404040;
+
+  /* White knob on a light-grey track needs an edge; the shadow is it. */
+  --ws-control-thumb: #FFFFFF;
+  --ws-control-thumb-shadow: 0 0 0 1px color-mix(in srgb, #000000 8%, transparent), 0 1px 3px 0 color-mix(in srgb, #000000 20%, transparent);
+
+  /* Same neutral, lighter: on a white page 72% would read as a blackout, not a dim. */
+  --ws-scrim: color-mix(in srgb, var(--ws-prim-neutral-950) 32%, transparent);
+
+  /* Already 4.8:1 on a white panel; unchanged. */
+  --ws-text-tertiary-panel: var(--ws-prim-neutral-500);
+  --ws-text-tertiary-raised: var(--ws-prim-neutral-500);
+
+  /* Light: the pale end of the ramp with its deep end on top — gold.800 on gold.100, 7.7:1. */
+  --ws-action-primary-shade: var(--ws-prim-gold-100);
+  --ws-action-primary-shade-text: var(--ws-prim-gold-800);
+
+  --ws-tip-surface: var(--ws-prim-neutral-950);
+  --ws-tip-text: var(--ws-prim-neutral-50);
+  --ws-tip-muted: var(--ws-prim-neutral-400);
+  --ws-tip-shadow: 0 8px 24px -8px color-mix(in srgb, #000000 40%, transparent);
+}

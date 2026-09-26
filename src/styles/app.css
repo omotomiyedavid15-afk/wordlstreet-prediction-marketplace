@@ -1,0 +1,712 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* `inline` matters: it makes utilities emit `var(--ws-…)` at the use site instead of
+   baking today's hex in. That is the whole reason flipping [data-theme] restyles the
+   app without a rebuild. Utility names mirror token names exactly (bg-surface-base,
+   text-text-primary) so nobody has to learn a second vocabulary. */
+@theme inline {
+  --color-surface-sunken: var(--ws-surface-sunken);
+  --color-surface-canvas: var(--ws-surface-canvas);
+  --color-surface-base: var(--ws-surface-base);
+  --color-surface-raised: var(--ws-surface-raised);
+  --color-surface-overlay: var(--ws-surface-overlay);
+  --color-surface-ticket: var(--ws-surface-ticket);
+
+  --color-text-primary: var(--ws-text-primary);
+  --color-text-secondary: var(--ws-text-secondary);
+  --color-text-tertiary: var(--ws-text-tertiary);
+  --color-text-disabled: var(--ws-text-disabled);
+  --color-text-on-accent: var(--ws-text-on-accent);
+  --color-text-on-danger: var(--ws-text-on-danger);
+  --color-text-on-ticket: var(--ws-text-on-ticket);
+
+  --color-border-subtle: var(--ws-border-subtle);
+  --color-border-default: var(--ws-border-default);
+  --color-border-strong: var(--ws-border-strong);
+
+  --color-action-primary: var(--ws-action-primary-default);
+  --color-action-primary-hover: var(--ws-action-primary-hover);
+  --color-action-primary-active: var(--ws-action-primary-active);
+  --color-action-primary-text: var(--ws-action-primary-text);
+  --color-action-primary-tonal: var(--ws-action-primary-tonal);
+  --color-action-primary-tonal-hover: var(--ws-action-primary-tonal-hover);
+
+  --color-feedback-success: var(--ws-feedback-success);
+  --color-feedback-warning: var(--ws-feedback-warning);
+  --color-feedback-danger: var(--ws-feedback-danger);
+  --color-feedback-info: var(--ws-feedback-info);
+
+  --color-text-on-feedback: var(--ws-text-on-feedback);
+  --color-text-on-domain: var(--ws-text-on-domain);
+
+  --color-tonal-success: var(--ws-tonal-success-surface);
+  --color-tonal-success-text: var(--ws-tonal-success-text);
+  --color-tonal-error: var(--ws-tonal-error-surface);
+  --color-tonal-error-text: var(--ws-tonal-error-text);
+  --color-tonal-warning: var(--ws-tonal-warning-surface);
+  --color-tonal-warning-text: var(--ws-tonal-warning-text);
+  --color-tonal-info: var(--ws-tonal-info-surface);
+  --color-tonal-info-text: var(--ws-tonal-info-text);
+  --color-tonal-neutral: var(--ws-tonal-neutral-surface);
+  --color-tonal-neutral-text: var(--ws-tonal-neutral-text);
+  --color-control-thumb: var(--ws-control-thumb);
+  --color-scrim: var(--ws-scrim);
+  --color-tip: var(--ws-tip-surface);
+  --color-tip-text: var(--ws-tip-text);
+  --color-tip-muted: var(--ws-tip-muted);
+  --color-action-primary-shade: var(--ws-action-primary-shade);
+  --color-action-primary-shade-text: var(--ws-action-primary-shade-text);
+  --color-feedback-success-fill: var(--ws-feedback-success-fill);
+  --color-feedback-warning-fill: var(--ws-feedback-warning-fill);
+  --color-feedback-danger-fill: var(--ws-feedback-danger-fill);
+  --color-feedback-info-fill: var(--ws-feedback-info-fill);
+
+  --color-domain-social: var(--ws-domain-social-accent);
+  --color-domain-vivid: var(--ws-domain-vivid-accent);
+  --color-domain-xstream: var(--ws-domain-xstream-accent);
+  --color-domain-marketplace: var(--ws-domain-marketplace-accent);
+  --color-domain-vision: var(--ws-domain-vision-accent);
+  --color-domain-academy: var(--ws-domain-academy-accent);
+  --color-domain-prediction: var(--ws-domain-prediction-accent);
+
+  /* Remaps Tailwind's radius scale onto ours, so rounded-md in a component and
+     radius-md on the Foundations page are the same 8px. */
+  --radius-sm: var(--ws-radius-sm);
+  --radius-md: var(--ws-radius-md);
+  --radius-lg: var(--ws-radius-lg);
+  --radius-xl: var(--ws-radius-xl);
+
+  /* "Noto Sans" here is not a second body face — it is loaded as a single-codepoint
+     subset and only ever supplies ₦, which Instrument Sans does not carry. */
+  --font-sans: "Instrument Sans", "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+}
+
+/* The reduced-motion form of a loader. Matches the OS setting, and also anything inside
+   [data-still] — so the Spinner page can show every still form beside the moving one
+   without asking the reader to change a system preference. */
+@custom-variant still {
+  @media (prefers-reduced-motion: reduce) {
+    @slot;
+  }
+  &:where([data-still], [data-still] *) {
+    @slot;
+  }
+}
+
+:root {
+  --ws-z-shell-header: 20;
+  --ws-z-sidebar-backdrop: 30;
+  --ws-z-sidebar-drawer: 40;
+}
+
+@layer base {
+  html {
+    background-color: var(--ws-surface-canvas);
+    color-scheme: dark;
+  }
+
+  html[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ws-action-primary-default);
+    outline-offset: 2px;
+  }
+
+  /* Fields with type="search" carry their own clear button (InputField's clearable);
+     the browser's would be a second one beside it. */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    appearance: none;
+  }
+}
+
+@layer components {
+  .ws-touch-target {
+    min-block-size: var(--ws-size-md);
+    min-inline-size: var(--ws-size-md);
+  }
+
+  .ws-sidebar-backdrop {
+    z-index: var(--ws-z-sidebar-backdrop);
+  }
+
+  .ws-sidebar-drawer {
+    z-index: var(--ws-z-sidebar-drawer);
+  }
+
+  @media (pointer: coarse) {
+    .ws-touch-target,
+    .ws-control-button {
+      min-block-size: var(--ws-size-lg);
+      min-inline-size: var(--ws-size-lg);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Used only by the Motion page demos. */
+@keyframes ws-sweep {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+@keyframes ws-travel {
+  from { transform: translateX(0); }
+  to { transform: translateX(150px); }
+}
+
+/* Progress. The hatch is the system's one texture: a diagonal at 135° in currentColor,
+   meaning "not measured" — the projected stretch of a pace bar, or an indeterminate bar
+   held still under reduced motion. The sweep is the indeterminate bar's moving segment;
+   linear, like the spinner, and hidden outright under reduced motion rather than left to
+   the global 0.01ms rule, which would turn an infinite loop into a flicker. */
+@layer components {
+  .ws-hatch {
+    background-image: repeating-linear-gradient(
+      135deg,
+      currentColor 0 1.5px,
+      transparent 1.5px 4.5px
+    );
+  }
+
+  .ws-progress-sweep {
+    animation: ws-progress-sweep 1.5s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ws-progress-sweep {
+      display: none;
+    }
+  }
+}
+
+/* A table that scrolls sideways shows a soft shadow at whichever edge has more
+   behind it, and none once you reach the end. Pure CSS: the two "local" covers scroll
+   with the content and hide the two "scroll" shadows fixed to the edges — until the
+   content runs out. The covers take --ws-scroll-surface, the surface the table sits on. */
+@layer components {
+  .ws-scroll-x {
+    --ws-scroll-surface: var(--ws-surface-base);
+    --ws-scroll-shade: color-mix(in srgb, var(--ws-surface-sunken) 55%, transparent);
+    background:
+      linear-gradient(to right, var(--ws-scroll-surface) 40%, transparent) left / 32px 100% no-repeat local,
+      linear-gradient(to left, var(--ws-scroll-surface) 40%, transparent) right / 32px 100% no-repeat local,
+      linear-gradient(to right, var(--ws-scroll-shade), transparent) left / 14px 100% no-repeat scroll,
+      linear-gradient(to left, var(--ws-scroll-shade), transparent) right / 14px 100% no-repeat scroll;
+  }
+}
+
+/* A scrolling modal body carries no shade at its edges. The vertical version of the trick
+   above used to fade a shadow under a fixed header and over a fixed footer; it made every
+   tall sheet look smudged while you scrolled, so the class is now geometry only and the
+   panel stays one flat colour from edge to edge. Depth in a sheet comes from its recessed
+   groups, never from a gradient that moves. */
+@layer components {
+  .ws-scroll-y {
+    background: none;
+  }
+}
+
+/* Sheet anatomy (ui/Sheet.tsx). Two marks that are easier as CSS than as elements:
+
+   1. The hero's tile. Concentric rings in the band's own ink at 12%, so it reads as
+      texture on any tone — gold, green or a domain accent — without a second colour.
+   2. A pending rail segment. Dotted, in the same geometry as the solid one, so a step
+      completing changes the fill and nothing else. */
+@layer components {
+  .ws-sheet-hero {
+    --ws-seg-dot: color-mix(in srgb, currentColor 55%, transparent);
+  }
+  .ws-sheet-hero[data-pattern="on"]::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    opacity: 0.12;
+    background: repeating-radial-gradient(circle at 50% 50%, currentColor 0 1.5px, transparent 1.5px 34px);
+    pointer-events: none;
+  }
+  .ws-sheet-seg[data-pending="on"] {
+    /* The dots take the surface's own ink, so the same segment reads on a panel and on
+       a gold hero without a second colour. */
+    background-image: radial-gradient(circle, var(--ws-seg-dot, var(--ws-text-tertiary)) 1px, transparent 1.2px);
+    background-size: 7px 2px;
+    background-repeat: repeat-x;
+    background-position: center;
+  }
+
+  /* 3. The two marks of a step still running. A segment touching the active node carries
+        one bright dot along it, so a flow that is waiting on something still looks alive;
+        the node itself fills from the bottom, the way a vessel does. Both are decoration
+        over a state the rail already states in words, so reduced motion drops them
+        outright rather than inheriting the global 0.01ms rule, which would strobe. */
+  .ws-sheet-seg[data-live="on"]::after {
+    content: "";
+    position: absolute;
+    inset-block: -1px;
+    width: 4px;
+    border-radius: 999px;
+    background: var(--ws-feedback-success);
+    animation: ws-seg-travel 1.7s linear infinite;
+  }
+  .ws-sheet-fill {
+    transform-origin: 50% 100%;
+    animation: ws-sheet-fill 2.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ws-sheet-seg[data-live="on"]::after {
+      display: none;
+    }
+    .ws-sheet-fill {
+      animation: none;
+      scale: 1 0.5;
+    }
+  }
+}
+
+@keyframes ws-seg-travel {
+  0% { left: 0; opacity: 0; }
+  18% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { left: calc(100% - 4px); opacity: 0; }
+}
+@keyframes ws-sheet-fill {
+  0%, 100% { scale: 1 0.34; }
+  50% { scale: 1 0.68; }
+}
+
+/* Range inputs. The native control stays — keyboard, touch and the screen-reader value
+   come with it — with its track made transparent so Slider.tsx can draw the track and
+   gold fill underneath. The thumb is an 18px disc in the surface colour with a gold rim;
+   it lifts a little while held. In a two-thumb slider the inputs are stacked, and only
+   the thumbs take the pointer, so each can be grabbed through the other's track. */
+@layer components {
+  .ws-range {
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .ws-range:disabled { cursor: not-allowed; }
+  .ws-range:focus { outline: none; }
+  .ws-range::-webkit-slider-runnable-track { height: 20px; background: transparent; }
+  .ws-range::-moz-range-track { height: 20px; background: transparent; }
+  .ws-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    border-radius: 9999px;
+    background: var(--ws-surface-base);
+    border: 2px solid var(--ws-action-primary-default);
+    box-shadow: var(--ws-shadow-control);
+    transition: scale var(--ws-duration-fast) var(--ws-ease-standard);
+  }
+  .ws-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: var(--ws-surface-base);
+    border: 2px solid var(--ws-action-primary-default);
+    box-shadow: var(--ws-shadow-control);
+  }
+  .ws-range:active::-webkit-slider-thumb { scale: 1.12; }
+  .ws-range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--ws-action-primary-default); outline-offset: 2px; }
+  .ws-range:focus-visible::-moz-range-thumb { outline: 2px solid var(--ws-action-primary-default); outline-offset: 2px; }
+
+  .ws-range-dual { position: absolute; inset: 0; pointer-events: none; }
+  .ws-range-dual::-webkit-slider-thumb { pointer-events: auto; }
+  .ws-range-dual::-moz-range-thumb { pointer-events: auto; }
+}
+
+/* The skeleton shimmer (ui/Spinner.tsx). The band is 200vw wide and fixed to the viewport,
+   so shifting it by one full tile loops seamlessly and every bar on screen shares the same
+   highlight. */
+@keyframes ws-shimmer {
+  from { background-position: -200vw 0; }
+  to { background-position: 0 0; }
+}
+
+/* Spinner (ui/Spinner.tsx). The ring and ticks turn with Tailwind's spin; the dots and the
+   ping are here because each is three coordinated pieces.
+
+   A spinner arrives on the toast's curve — duration-base, ease-entrance, from 75% and
+   transparent — so a button swapping its glyph for one settles instead of popping. It
+   leaves by unmounting: the result replacing it is the news, and a spinner lingering on
+   its way out would say "still working" a beat too long.
+
+   The loops are infinite, so reduced motion cannot be left to the global 0.01ms rule — that
+   turns a loop into a flicker. Each one stops outright and holds a still form that still
+   reads as waiting: the dots as a stepped ellipsis, the ping as a fixed halo. */
+@layer components {
+  .ws-spinner {
+    transition:
+      opacity var(--ws-duration-base) var(--ws-ease-entrance),
+      scale var(--ws-duration-base) var(--ws-ease-entrance);
+  }
+  @starting-style {
+    .ws-spinner { opacity: 0; scale: 0.75; }
+  }
+
+  /* Pulse: opacity only, a calm left-to-right fade. Bounce: a staggered hop. */
+  .ws-dots-pulse > span { animation: ws-dot-pulse 1.2s var(--ws-ease-standard) infinite both; }
+  .ws-dots-pulse > span:nth-child(2) { animation-delay: 0.2s; }
+  .ws-dots-pulse > span:nth-child(3) { animation-delay: 0.4s; }
+  .ws-dots-bounce > span { animation: ws-dot-bounce 1.1s infinite both; }
+  .ws-dots-bounce > span:nth-child(2) { animation-delay: 0.14s; }
+  .ws-dots-bounce > span:nth-child(3) { animation-delay: 0.28s; }
+
+  /* Slow on purpose: a status that pings every second reads as an alarm. */
+  .ws-ping { animation: ws-ping 2s var(--ws-ease-entrance) infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is(.ws-dots-pulse, .ws-dots-bounce) > span { animation: none; }
+    :is(.ws-dots-pulse, .ws-dots-bounce) > span:nth-child(1) { opacity: 0.35; }
+    :is(.ws-dots-pulse, .ws-dots-bounce) > span:nth-child(2) { opacity: 0.6; }
+    :is(.ws-dots-pulse, .ws-dots-bounce) > span:nth-child(3) { opacity: 0.9; }
+    .ws-ping { animation: none; scale: 2.2; opacity: 0.35; }
+    .ws-spinner { transition: none; }
+  }
+  [data-still] :is(.ws-dots-pulse, .ws-dots-bounce) > span { animation: none; }
+  [data-still] :is(.ws-dots-pulse, .ws-dots-bounce) > span:nth-child(1) { opacity: 0.35; }
+  [data-still] :is(.ws-dots-pulse, .ws-dots-bounce) > span:nth-child(2) { opacity: 0.6; }
+  [data-still] :is(.ws-dots-pulse, .ws-dots-bounce) > span:nth-child(3) { opacity: 0.9; }
+  [data-still] .ws-ping { animation: none; scale: 2.2; opacity: 0.35; }
+}
+
+@keyframes ws-dot-pulse {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+@keyframes ws-dot-bounce {
+  0%, 50%, 100% { translate: 0 0; animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  25% { translate: 0 -90%; animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+}
+@keyframes ws-ping {
+  0% { scale: 1; opacity: 0.75; }
+  75%, 100% { scale: 2.6; opacity: 0; }
+}
+
+/* A live figure that just changed: a tint of its direction's colour (--flash, set per
+   cell), fading to nothing. It animates only background-color, so the digits never move. */
+@keyframes ws-flash {
+  from { background-color: color-mix(in srgb, var(--flash) 22%, transparent); }
+}
+
+@keyframes ws-progress-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+/* The pressable treatment shared by filled controls. Buttons remain flat: fill, border
+   and a one-pixel press movement provide the hierarchy without a cast shadow. */
+@layer components {
+  .ws-pressable {
+    background-image: linear-gradient(to bottom, var(--ws-sheen), transparent 65%);
+  }
+
+  .ws-pressable:active:not(:disabled) {
+    background-image: none;
+    transform: translateY(1px);
+  }
+
+  /* A flat control keeps the sink-on-press but never lifts, so ghost and secondary
+     still feel like the same family without competing with a primary. */
+  .ws-pressable-flat:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+}
+
+@layer components {
+  .ws-nav-pill {
+    background-color: var(--ws-surface-sunken);
+  }
+
+  /* Compatibility surface for older UniversalHeader examples. Header surfaces are plain;
+     the Vision hero variant intentionally bypasses this class and is transparent. */
+  .ws-glass {
+    background-color: var(--ws-surface-raised);
+    border-color: color-mix(in srgb, var(--ws-border-default) 60%, transparent);
+  }
+}
+
+/* Overlays — Modal, Drawer and BottomSheet, all native <dialog>. One motion family on the
+   motion tokens: the surface fades in on the entrance curve and out on the exit curve,
+   faster, so leaving never feels slower than arriving. A modal also grows from 97%
+   (never from nothing); a drawer slides from its edge; a sheet rises from the bottom.
+   The exit runs because `display` and `overlay` transition discretely — the dialog stays
+   in the top layer until the fade has finished.
+
+   Under reduced motion the movement goes and the fade stays, at the fast duration. That
+   overrides the global 0.01ms rule on purpose: a surface that blinks into existence with
+   no fade at all is harder to follow than one that dissolves in. */
+@layer components {
+  .ws-surface {
+    transition-property: opacity, translate, scale, display, overlay;
+    transition-behavior: allow-discrete;
+    transition-duration: var(--ws-duration-base);
+    transition-timing-function: var(--ws-ease-entrance);
+  }
+  .ws-surface:not([open]) {
+    opacity: 0;
+    transition-duration: var(--ws-duration-fast);
+    transition-timing-function: var(--ws-ease-exit);
+  }
+  .ws-surface::backdrop {
+    background-color: var(--ws-scrim);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    transition-property: opacity, display, overlay;
+    transition-behavior: allow-discrete;
+    transition-duration: var(--ws-duration-base);
+    transition-timing-function: var(--ws-ease-standard);
+  }
+  .ws-surface:not([open])::backdrop {
+    opacity: 0;
+    transition-duration: var(--ws-duration-fast);
+  }
+
+  .ws-modal:not([open]) { scale: 0.97; }
+  .ws-drawer:not([open]) { translate: 100% 0; }
+  .ws-sheet:not([open]) { translate: 0 100%; }
+  @starting-style {
+    .ws-surface[open],
+    .ws-surface[open]::backdrop { opacity: 0; }
+    .ws-modal[open] { scale: 0.97; }
+    .ws-drawer[open] { translate: 100% 0; }
+    .ws-sheet[open] { translate: 0 100%; }
+  }
+
+  /* A form modal becomes a bottom sheet on a phone — same element, same content. */
+  @media (max-width: 639.98px) {
+    .ws-modal[data-mobile="sheet"]:not([open]) { scale: none; translate: 0 100%; }
+    @starting-style {
+      .ws-modal[data-mobile="sheet"][open] { scale: none; translate: 0 100%; }
+    }
+  }
+
+  /* A surface opened on top of another dims the page only a little more, so the one it
+     came from stays visible behind it — the confirmation over a drawer, the second sheet
+     over the first. Half the scrim, no second blur. */
+  .ws-surface[data-stacked]::backdrop {
+    background-color: color-mix(in srgb, var(--ws-scrim) 50%, transparent);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* A sheet with another sheet stacked on it steps back: a little smaller, pinned at its
+     top edge so it still shows above the one in front. */
+  .ws-sheet[data-covered],
+  .ws-modal[data-mobile="sheet"][data-covered] {
+    transform-origin: 50% 0;
+  }
+  .ws-sheet[data-covered] { scale: 0.95; }
+  @media (max-width: 639.98px) {
+    .ws-modal[data-mobile="sheet"][data-covered] { scale: 0.95; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ws-surface,
+    .ws-surface::backdrop {
+      transition-duration: var(--ws-duration-fast) !important;
+    }
+    .ws-modal:not([open]),
+    .ws-drawer:not([open]),
+    .ws-sheet:not([open]),
+    .ws-modal[data-mobile="sheet"]:not([open]),
+    .ws-sheet[data-covered],
+    .ws-modal[data-mobile="sheet"][data-covered] {
+      scale: none;
+      translate: none;
+    }
+    @starting-style {
+      .ws-modal[open],
+      .ws-drawer[open],
+      .ws-sheet[open],
+      .ws-modal[data-mobile="sheet"][open] {
+        scale: none;
+        translate: none;
+      }
+    }
+  }
+}
+
+/* The overlay panel: surface.base — one step below the raised menus that open on top of
+   it. Inside it, surface.base points one step darker again (canvas), so the fields,
+   chips and secondary buttons that paint "base" sit recessed in the panel instead of
+   flush with it; wells go darker still (sunken). --ws-panel keeps the panel's own colour
+   for anything that has to match it, like the scroll shades. */
+@layer components {
+  .ws-panel {
+    --ws-panel: var(--ws-surface-base);
+    background-color: var(--ws-panel);
+  }
+  .ws-panel > * {
+    --ws-surface-base: var(--ws-surface-canvas);
+    --ws-text-tertiary: var(--ws-text-tertiary-panel);
+  }
+  /* Menus and popovers sit on surface.raised; their muted lines need their own step. */
+  .ws-raised {
+    --ws-text-tertiary: var(--ws-text-tertiary-raised);
+  }
+}
+
+/* While any blocking surface is open the page behind it does not scroll — the platform
+   already knows which dialogs are modal, so the lock is one selector rather than a
+   counter in script. A non-modal drawer does not match :modal and leaves the page alone.
+   The gutter is reserved permanently so the page does not jump sideways when the
+   scrollbar goes away. */
+html {
+  scrollbar-gutter: stable;
+}
+html:has(dialog:modal) {
+  overflow: hidden;
+}
+
+/* Tooltip family — the inverted surface and the arrow every floating label shares.
+   .ws-tip is the fill; .ws-tip-arrow is a clipped triangle in --ws-arrow-fill (the tip
+   fill by default, a card's surface when set) that reads data-side off its parent — set by
+   placeAgainst for anything floating, by hand for a static callout — and sits on the
+   anchor's centre, held 12px in from the corners so it never rides the rounding. */
+@layer components {
+  .ws-tip {
+    --ws-arrow-fill: var(--ws-tip-surface);
+    background-color: var(--ws-tip-surface);
+    color: var(--ws-tip-text);
+    box-shadow: var(--ws-tip-shadow);
+  }
+  /* The callout's light fill: the tooltip's text colour as a surface, fixed across themes
+     like the dark one. */
+  .ws-tip-light {
+    --ws-arrow-fill: var(--ws-tip-text);
+    background-color: var(--ws-tip-text);
+    color: var(--ws-tip-surface);
+    box-shadow: 0 0 0 1px color-mix(in srgb, #000000 6%, transparent), 0 4px 14px -4px color-mix(in srgb, #000000 30%, transparent);
+  }
+  .ws-tip-arrow {
+    position: absolute;
+    background-color: var(--ws-arrow-fill, var(--ws-tip-surface));
+    pointer-events: none;
+  }
+  [data-side="top"] > .ws-tip-arrow,
+  [data-side="bottom"] > .ws-tip-arrow {
+    width: 12px;
+    height: 6px;
+    left: clamp(12px, var(--ws-anchor-x, 50%), calc(100% - 12px));
+    translate: -50% 0;
+  }
+  [data-side="left"] > .ws-tip-arrow,
+  [data-side="right"] > .ws-tip-arrow {
+    width: 6px;
+    height: 12px;
+    top: clamp(12px, var(--ws-anchor-y, 50%), calc(100% - 12px));
+    translate: 0 -50%;
+  }
+  [data-side="top"] > .ws-tip-arrow { top: calc(100% - 0.5px); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+  [data-side="bottom"] > .ws-tip-arrow { bottom: calc(100% - 0.5px); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  [data-side="left"] > .ws-tip-arrow { left: calc(100% - 0.5px); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+  [data-side="right"] > .ws-tip-arrow { right: calc(100% - 0.5px); clip-path: polygon(100% 0, 100% 100%, 0 50%); }
+
+  /* A warm tooltip — the pointer just left another one — appears without the fade, so
+     sweeping along a toolbar reads each label at once. */
+  .ws-tip[data-instant] { transition: none; }
+
+  /* The element a tour step points at: a gold ring, and everything else in the frame
+     dimmed by the scrim. The ring is the outline so it never shifts layout. */
+  [data-tour-active] {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--ws-action-primary-default);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 9999px color-mix(in srgb, var(--ws-scrim) 70%, transparent);
+    transition: outline-offset var(--ws-duration-fast) var(--ws-ease-standard);
+  }
+}
+
+/* Accordion panel (ui/Accordion.tsx). The grid row runs 0fr → 1fr, so a panel opens to its
+   natural height with nothing measured — on the toast's curve, duration-slow and
+   ease-standard — and its content fades in over the top.
+
+   Under reduced motion the height change goes and the fade stays, at the fast duration: the
+   panel appears in place and its content dissolves in rather than sliding. That overrides
+   the global 0.01ms rule on purpose, as the overlays do — content that blinks into being
+   is harder to follow than content that fades. [data-still] shows it on the docs page. */
+@layer components {
+  .ws-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows var(--ws-duration-slow) var(--ws-ease-standard),
+      opacity var(--ws-duration-base) var(--ws-ease-standard);
+  }
+  .ws-collapse[data-open="true"] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ws-collapse {
+      transition: opacity var(--ws-duration-fast) linear !important;
+    }
+  }
+  [data-still] .ws-collapse {
+    transition: opacity var(--ws-duration-fast) linear;
+  }
+}
+
+/* Vivid's listening waveform (domains/vivid/Vivid.tsx). Each bar breathes between a quarter
+   and its full height on the standard curve, out of step with its neighbours (durations and
+   delays are set per bar). Still, the bars hold their heights — a waveform, not a freeze. */
+@layer components {
+  .ws-wave > span {
+    animation: ws-wave 800ms var(--ws-ease-standard) infinite alternate both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ws-wave > span { animation: none; }
+  }
+  [data-still] .ws-wave > span { animation: none; }
+}
+@keyframes ws-wave {
+  from { scale: 1 0.25; }
+  to { scale: 1 1; }
+}
+
+/* CategoryMenu's panel (ui/CategoryMenu.tsx). It scales from the trigger's top-left corner
+   rather than its own centre, so the panel reads as coming out of the button that opened
+   it. Entrance only — the panel unmounts on close, and a fade-out on a menu you have
+   already decided to leave just delays the page behind it. */
+@layer components {
+  .ws-category-menu {
+    animation: ws-category-menu var(--ws-duration-base) var(--ws-ease-entrance) both;
+    transform-origin: top left;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ws-category-menu { animation-name: ws-category-menu-fade; }
+  }
+  [data-still] .ws-category-menu { animation: none; }
+}
+@keyframes ws-category-menu {
+  from { opacity: 0; scale: 0.985; translate: 0 -4px; }
+}
+@keyframes ws-category-menu-fade {
+  from { opacity: 0; }
+}

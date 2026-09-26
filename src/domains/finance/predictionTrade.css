@@ -1,0 +1,26 @@
+.prediction-trade-form { display:grid; gap:var(--ws-space-5); min-width:0; }
+.trade-ticket-toolbar { display:flex; align-items:center; justify-content:space-between; gap:var(--ws-space-3); border-bottom:1px solid var(--ws-border-subtle); padding-bottom:var(--ws-space-4); }
+.trade-ticket-toolbar>section { display:flex; gap:var(--ws-space-2); }
+.trade-ticket-toolbar>section button { text-transform:uppercase; font-weight:600; }
+.trade-ticket-toolbar>section button[aria-pressed="true"] { color:var(--ws-text-primary); border-bottom:2px solid var(--ws-action-primary-default); border-radius:0; }
+.trade-ticket-toolbar>section button[aria-pressed="false"] { color:var(--ws-text-secondary); }
+.trade-market-question { font-size:var(--ws-font-size-body); line-height:1.5; margin:0; }
+.prediction-trade-form fieldset { min-width:0; display:grid; gap:var(--ws-space-5); }
+.trade-contract-heading { display:flex; align-items:center; gap:var(--ws-space-3); min-width:0; }
+.trade-contract-heading>section,.trade-contract-heading>div { min-width:0; flex:1; }
+.trade-contract-heading button { font-weight:600; font-size:var(--ws-font-size-body); }
+.trade-answer-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); padding:var(--ws-space-2); border-radius:var(--ws-radius-full); background:var(--ws-surface-raised); }
+.trade-answer-tabs button { width:100%; }
+.trade-funding-mark { width:var(--ws-space-6); height:var(--ws-space-6); flex-shrink:0; border-radius:var(--ws-radius-full); object-fit:cover; display:inline-grid; place-items:center; background:var(--ws-surface-raised); text-decoration:none; font-size:var(--ws-font-size-label); }
+.trade-funding-picker { width:calc(var(--ws-space-9) + var(--ws-space-8)); }
+.trade-funding-picker>button { padding-inline:var(--ws-space-3); background:transparent; border:0; }
+.trade-available { display:flex; align-items:center; justify-content:space-between; gap:var(--ws-space-3); margin-top:calc(-1 * var(--ws-space-4)); }
+.trade-available p,.trade-demo-note,.trade-funding-summary { font-size:var(--ws-font-size-caption); color:var(--ws-text-secondary); line-height:1.5; margin:0; }
+.trade-limit-fields { display:grid; gap:var(--ws-space-4); }
+.trade-ticket-summary { display:grid; gap:var(--ws-space-4); margin:0; font-size:var(--ws-font-size-ui); font-variant-numeric:tabular-nums; }
+.trade-ticket-summary>section { display:flex; align-items:baseline; justify-content:space-between; gap:var(--ws-space-4); }
+.trade-ticket-summary dt { color:var(--ws-text-secondary); }
+.trade-ticket-summary dd { margin:0; text-align:right; overflow-wrap:anywhere; }
+.trade-max-payout dt small { display:block; margin-top:var(--ws-space-2); font-size:var(--ws-font-size-caption); }
+.trade-max-payout dd { font-size:calc(var(--ws-font-size-heading) * 1.5); font-weight:600; }
+.trade-review-button { width:100%; }
