@@ -117,18 +117,18 @@
 
 /* raw primitives */
 :root {
-  /* Primary gold ramp, anchored at the prediction market brand color. */
-  --ws-prim-gold-50: #FDF9EC;
-  --ws-prim-gold-100: #FAEFCF;
-  --ws-prim-gold-200: #F3DA94;
-  --ws-prim-gold-300: #ECC76A;
-  --ws-prim-gold-400: #E2B43F;
-  --ws-prim-gold-500: #C99A2C;
-  --ws-prim-gold-600: #A67B1E;
-  --ws-prim-gold-700: #795815;
-  --ws-prim-gold-800: #513B10;
-  --ws-prim-gold-900: #302308;
-  --ws-prim-gold-950: #1B1405;
+  /* Primary gold ramp, anchored at the prediction market brand color (#EAB308 at 400). */
+  --ws-prim-gold-50: #FEFCE8;
+  --ws-prim-gold-100: #FEF9C3;
+  --ws-prim-gold-200: #FEF08A;
+  --ws-prim-gold-300: #FACC15;
+  --ws-prim-gold-400: #EAB308;
+  --ws-prim-gold-500: #CA8A04;
+  --ws-prim-gold-600: #A16207;
+  --ws-prim-gold-700: #854D0E;
+  --ws-prim-gold-800: #713F12;
+  --ws-prim-gold-900: #422006;
+  --ws-prim-gold-950: #2A1404;
   --ws-prim-neutral-50: #FAFAFA;
   --ws-prim-neutral-100: #F5F5F5;
   --ws-prim-neutral-200: #E6E6E6;
