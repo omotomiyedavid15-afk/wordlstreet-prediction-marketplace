@@ -50,7 +50,7 @@
      accent is light enough for near-black: 4.8:1 at worst (vivid), 6.1:1 at best. */
   --ws-text-on-domain: var(--ws-prim-neutral-950);
   --ws-feedback-success: #34A073;
-  --ws-feedback-warning: #D4E745;
+  --ws-feedback-warning: #F59E0B;
   --ws-feedback-danger: #FF3138;
   --ws-feedback-info: #3182CE;
 
@@ -59,7 +59,7 @@
      (5.2:1 worst case, on info). Only success diverges between themes — see light. */
   --ws-text-on-feedback: #0B0B0B;
   --ws-feedback-success-fill: #34A073;
-  --ws-feedback-warning-fill: #D4E745;
+  --ws-feedback-warning-fill: #F59E0B;
   --ws-feedback-danger-fill: #FF3138;
   --ws-feedback-info-fill: #3182CE;
 }
